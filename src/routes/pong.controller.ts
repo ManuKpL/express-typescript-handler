@@ -9,7 +9,7 @@ const validation = {
   }),
 } satisfies ValidationSchema
 
-export type ResBody = {
+type ResBody = {
   status: 'ok' | 'ko'
 }
 
