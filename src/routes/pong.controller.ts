@@ -21,6 +21,9 @@ const requestHandler: InferHandler<typeof validation, ResBody, ReqExtra> = (req,
 }
 
 export default configureRequest<typeof validation, ResBody, ReqExtra>({
+  method: 'get',
+  path: '/pong/:id',
+  middlewares: [loggerMiddleware, fakeUserMiddleware],
   validation: validation,
   handler: requestHandler,
 })
