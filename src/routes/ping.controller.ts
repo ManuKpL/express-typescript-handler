@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { configureRequest } from '../lib/configure-request'
 
-export const pingRequestHandlers = configureRequest({
+export default configureRequest({
   validation: { params: z.object({ id: z.string().min(1) }) },
   responseBody: z.object({ status: z.enum(['ok', 'ko']) }),
   extra: ['user'],

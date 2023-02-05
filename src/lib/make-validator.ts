@@ -15,7 +15,7 @@ export type ValidationSchema<
   locals?: ReqLocals
 }
 
-export type InferValidationHandler<Handler> = Handler extends ValidationSchema<
+export type InferValidationHandler<Validation> = Validation extends ValidationSchema<
   infer ReqParams,
   infer ReqBody,
   infer ReqQuery,

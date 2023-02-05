@@ -1,6 +1,6 @@
-import type { RequestHandler } from 'express'
+import { RequestHandler } from 'express'
 import { z } from 'zod'
-import { makeController, type InferControllerHandler, type RequestExtra } from './make-controller'
+import { makeHandler, type InferHandler, type RequestExtra } from './make-handler'
 import { makeValidator, type ValidationSchema } from './make-validator'
 
 export function configureRequest<
@@ -8,12 +8,12 @@ export function configureRequest<
   ResBody,
   ReqExtra extends RequestExtra = Record<string, never>
 >(definition: {
-  handler: InferControllerHandler<Validation, ResBody, ReqExtra>
+  handler: InferHandler<Validation, ResBody, ReqExtra>
   validation?: Validation
   extra?: Exclude<ReqExtra, Record<string, unknown>> | z.Schema<ReqExtra>
   responseBody?: z.Schema<ResBody>
 }): RequestHandler[] {
-  const handlers = [makeController(definition.handler)]
+  const handlers = [makeHandler(definition.handler)]
 
   if (definition.validation) {
     handlers.unshift(makeValidator(definition.validation))

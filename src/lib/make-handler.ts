@@ -25,27 +25,26 @@ type InferResponse<Handler> = Handler extends RequestHandler<
 type OptionalProperties<T> = keyof { [P in keyof T as T[P] extends Required<T>[P] ? never : P]: T[P] }
 export type RequestExtra = OptionalProperties<Request>[] | Record<string, unknown>
 
-export type InferControllerHandler<Validation, ResBody, RequestExtra> =
-  InferValidationHandler<Validation> extends RequestHandler<
-    infer Params,
-    infer _ResBody,
-    infer ReqBody,
-    infer ReqQuery,
-    infer Locals
-  >
-    ? (
-        req: InferExtendedRequest<RequestHandler<Params, ResBody, ReqBody, ReqQuery, Locals>, RequestExtra>,
-        res: InferResponse<RequestHandler<Params, ResBody, ReqBody, ReqQuery, Locals>>,
-        next: NextFunction
-      ) => ReturnType<RequestHandler>
-    : never
+export type InferHandler<Validation, ResBody, RequestExtra> = InferValidationHandler<Validation> extends RequestHandler<
+  infer Params,
+  infer _ResBody,
+  infer ReqBody,
+  infer ReqQuery,
+  infer Locals
+>
+  ? (
+      req: InferExtendedRequest<RequestHandler<Params, ResBody, ReqBody, ReqQuery, Locals>, RequestExtra>,
+      res: InferResponse<RequestHandler<Params, ResBody, ReqBody, ReqQuery, Locals>>,
+      next: NextFunction
+    ) => ReturnType<RequestHandler>
+  : never
 
 type InferExtendedRequest<Handler, ReqExtra> = ReqExtra extends Exclude<RequestExtra, Record<string, unknown>>
   ? Omit<InferRequest<Handler>, ReqExtra[number]> & Required<Pick<InferRequest<Handler>, ReqExtra[number]>>
   : InferRequest<Handler> & RequestExtra
 
-export function makeController<Validation, ResBody = unknown, ReqExtra extends RequestExtra = Record<string, never>>(
-  handler: InferControllerHandler<Validation, ResBody, ReqExtra>
+export function makeHandler<Validation, ResBody = unknown, ReqExtra extends RequestExtra = Record<string, never>>(
+  handler: InferHandler<Validation, ResBody, ReqExtra>
 ): RequestHandler {
   return handler as unknown as RequestHandler
 }

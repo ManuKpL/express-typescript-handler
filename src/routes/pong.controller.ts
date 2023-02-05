@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { configureRequest } from '../lib/configure-request'
-import type { InferControllerHandler } from '../lib/make-controller'
+import type { InferHandler } from '../lib/make-handler'
 import type { ValidationSchema } from '../lib/make-validator'
 
 const validation = {
@@ -15,12 +15,12 @@ type ResBody = {
 
 type ReqExtra = ['user']
 
-const requestHandler: InferControllerHandler<typeof validation, ResBody, ReqExtra> = (req, res) => {
+const requestHandler: InferHandler<typeof validation, ResBody, ReqExtra> = (req, res) => {
   console.log({ id: req.params.id, user: req.user.name })
   res.json({ status: 'ok' })
 }
 
-export const pongRequestHandlers = configureRequest<typeof validation, ResBody, ReqExtra>({
+export default configureRequest<typeof validation, ResBody, ReqExtra>({
   validation: validation,
   handler: requestHandler,
 })

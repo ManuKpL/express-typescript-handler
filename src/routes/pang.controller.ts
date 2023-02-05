@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { makeController } from '../lib/make-controller'
+import { makeHandler } from '../lib/make-handler'
 import { makeValidator, type ValidationSchema } from '../lib/make-validator'
 
 const validation = {
@@ -14,7 +14,7 @@ type ResBody = {
   status: 'ok' | 'ko'
 }
 
-export const pangController = makeController<typeof validation, ResBody, ['user']>((req, res) => {
+export const pangController = makeHandler<typeof validation, ResBody, ['user']>((req, res) => {
   console.log({ id: req.params.id, user: req.user.name })
   res.json({ status: 'ok' })
 })
